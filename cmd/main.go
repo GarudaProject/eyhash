@@ -2,33 +2,62 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
+	"path"
 
 	"github.com/GarudaProject/eyhash"
 )
 
 func usage() {
 	fmt.Printf(`
-    usage: eyehash <filename>
+usage: eyehash <filename/directory> -f/-d [file/directory]
   `)
 }
 
 func main() {
-	if len(os.Args) <= 1 {
+	if len(os.Args) < 2 {
 		usage()
 		return
 	}
 
 	file := os.Args[1]
+	mode := os.Args[2]
 
-	fmt.Println()
+	switch mode {
+	case "-f":
+		info, err := eyhash.FileInfo(file)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		fmt.Println()
+		hashInfo(file, info)
+		break
+	case "-d":
+		dirs, err := os.ReadDir(file)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	info, err := eyhash.FileInfo(file)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
+		for _, dir := range dirs {
+			filePath := path.Join(file, dir.Name())
+			info, err := eyhash.FileInfo(filePath)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+			fmt.Println()
+			hashInfo(filePath, info)
+		}
+		break
+	default:
+		usage()
+		break
 	}
+}
+
+func hashInfo(file string, info *eyhash.Info) {
 	md5hash, err := eyhash.MD5File(file)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -46,7 +75,7 @@ func main() {
 	}
 	sh512hash, err := eyhash.SHA512File(file)
 	if err != nil {
-		log.Println(err.Error())
+		fmt.Println(err.Error())
 		return
 	}
 

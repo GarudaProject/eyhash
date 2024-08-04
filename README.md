@@ -1,10 +1,8 @@
-# eyehash
+# eyhash
 
-<center>
-
-## Simple File hashing module and CLI program for make easy hashing files and directory.
-
-</center>
+<div align="center">
+<p>Simple hashing module and CLI program for easy file and directory hashing.</p>
+</div>
 
 ## Hashing
 
@@ -16,7 +14,7 @@
 ## Usage
 
 ```sh
-$ eyhash <filename>
+$ eyhash <filename/directory> -f/-d [file/directory]
 
 # Output
 FileName: test.txt, Size: 22 bytes, ModTime: 2024-08-05 00:28:36.2926994 +0700 +07
